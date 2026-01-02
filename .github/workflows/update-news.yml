@@ -1,1 +1,32 @@
+name: Update Aerospace Park News
 
+on:
+  schedule:
+    - cron: "0 */6 * * *"   # Every 6 hours
+  workflow_dispatch:         # allows manual run
+
+jobs:
+  fetch-news:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Install dependencies
+        run: pip install feedparser requests beautifulsoup4
+
+      - name: Run news fetch script
+        run: python fetch_news.py
+
+      - name: Commit and push updates
+        run: |
+          git config user.name "Aerospace Park Bot"
+          git config user.email "bot@github.com"
+          git add news.json
+          git commit -m "Auto-update news" || exit 0
+          git push
