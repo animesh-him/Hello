@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hello Aerospace Park</title>
+<style>
+/* --------- NEON BACKGROUND --------- */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(270deg, #ff00cc, #3333ff, #00ffcc, #ffcc00);
+    background-size: 800% 800%;
+    animation: neonBG 15s ease infinite;
+    color: #fff;
+}
+@keyframes neonBG {
+    0% {background-position:0% 50%;}
+    50% {background-position:100% 50%;}
+    100% {background-position:0% 50%;}
+}
+
+/* --------- HEADER --------- */
+h1 { text-align: center; margin: 20px 0; font-weight: bold; }
+.subtitle { text-align:center; margin-bottom:20px; }
+
+/* --------- CATEGORY FILTER --------- */
+.categories {
+    display:flex; justify-content:center; flex-wrap:wrap; margin-bottom:20px; gap:10px;
+}
+.category-box {
+    padding:10px 20px; border-radius:10px; cursor:pointer; font-weight:bold;
+}
+.category-box:hover { opacity:0.8; }
+
+.jobs { background:#ff4d4d; color:#fff; }
+.infra { background:#4dff88; color:#000; }
+.events { background:#4da6ff; color:#fff; }
+.alerts { background:#ffcc00; color:#000; }
+.others { background:#b366ff; color:#fff; }
+.all { background:#000; color:#00ffcc; }
+
+/* --------- SEARCH BAR --------- */
+#searchBox {
+    width:80%; max-width:500px;
+    margin: 10px auto 20px auto; display:block;
+    padding:10px; border-radius:10px;
+    border:2px solid #00ffcc; background:#000; color:#00ffcc;
+}
+
+/* --------- NEWS ITEM --------- */
+.news-item {
+    background: rgba(0,0,0,0.5);
+    border-radius:10px;
+    padding:15px;
+    margin: 10px auto;
+    max-width:720px;
+}
+.news-item h3 { margin:0 0 5px 0; font-size:18px; }
+.news-item .date { font-size:12px; opacity:0.7; margin-bottom:5px; }
+.news-item a { color:#00ffcc; text-decoration:underline; }
+
+/* --------- FOOTER --------- */
+footer { text-align:center; margin-top:40px; font-style:italic; opacity:0.8; }
+</style>
+</head>
+<body>
+
+<h1>Hello Aerospace Park</h1>
+<p class="subtitle">Auto-updated news related to Aerospace Park, Bangalore</p>
+
+<!-- CATEGORY FILTER -->
+<div class="categories">
+    <div class="category-box all" onclick="filterCategory('all')">All</div>
+    <div class="category-box jobs" onclick="filterCategory('Jobs')">Jobs</div>
+    <div class="category-box infra" onclick="filterCategory('Infra')">Infra</div>
+    <div class="category-box events" onclick="filterCategory('Events')">Events</div>
+    <div class="category-box alerts" onclick="filterCategory('Alerts')">Alerts</div>
+    <div class="category-box others" onclick="filterCategory('Others')">Others</div>
+</div>
+
+<!-- SEARCH -->
+<input type="text" id="searchBox" placeholder="Search news..." onkeyup="searchNews()">
+
+<!-- NEWS CONTAINER -->
+<div id="news"></div>
+
+<footer><i>Created by Animesh</i></footer>
+
+<script>
+// --------- FETCH NEWS ---------
+let allNews = [];
+fetch("news.json")
+.then(res => res.json())
+.then(data => {
+    // Sort by date descending
+    data.sort((a,b)=>{
+        if(a.date && b.date) return new Date(b.date)-new Date(a.date);
+        else return 0;
+    });
+    allNews = data;
+    displayNews(data);
+});
+
+// --------- DISPLAY NEWS FUNCTION ---------
+function displayNews(newsArray) {
+    const container = document.getElementById("news");
+    container.innerHTML = "";
+    newsArray.forEach(item => {
+        const div = document.createElement("div");
+        div.className = "news-item";
+        // headline formatting
+        let categoryLabel = item.category ? `<span style="font-weight:bold; color:#ffcc00;">[${item.category}]</span> ` : "";
+        div.innerHTML = `
+            <h3>${categoryLabel}${item.title}</h3>
+            <p class="date">${item.date || 'Date not available'}</p>
+            <a href="${item.link}" target="_blank">Read full article</a>
+        `;
+        div.dataset.category = item.category || "Others";
+        container.appendChild(div);
+    });
+}
+
+// --------- FILTER BY CATEGORY ---------
+function filterCategory(cat) {
+    if(cat==='all') { displayNews(allNews); return; }
+    const filtered = allNews.filter(item => (item.category||"Others")===cat);
+    displayNews(filtered);
+}
+
+// --------- SEARCH FUNCTION ---------
+function searchNews() {
+    const query = document.getElementById("searchBox").value.toLowerCase();
+    const filtered = allNews.filter(item => item.title.toLowerCase().includes(query));
+    displayNews(filtered);
+}
+</script>
+
+</body>
+</html>
