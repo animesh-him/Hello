@@ -3,72 +3,118 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hello Aerospace Park</title>
+<title>Hello Aerospace Park!</title>
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
 <style>
+/* ---------- BASE ---------- */
 body {
     margin: 0;
-    font-family: Arial, sans-serif;
-    background: linear-gradient(270deg, #ff00cc, #3333ff, #00ffcc, #ffcc00);
-    background-size: 800% 800%;
-    animation: neonBG 15s ease infinite;
-    color: #fff;
-}
-@keyframes neonBG {
-    0% {background-position:0% 50%;}
-    50% {background-position:100% 50%;}
-    100% {background-position:0% 50%;}
+    font-family: 'Inter', system-ui, sans-serif;
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    color: #eaeaea;
 }
 
-h1 { text-align: center; margin: 20px 0; }
-.subtitle { text-align:center; margin-bottom:20px; }
+/* ---------- HEADINGS ---------- */
+h1 {
+    text-align: center;
+    margin: 26px 0 8px;
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 40px;
+    letter-spacing: 0.5px;
+}
 
+.subtitle {
+    text-align: center;
+    margin-bottom: 26px;
+    opacity: 0.85;
+}
+
+/* ---------- CATEGORIES ---------- */
 .categories {
-    display:flex; justify-content:center; flex-wrap:wrap;
-    gap:10px; margin-bottom:20px;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 22px;
 }
+
 .category-box {
-    padding:10px 20px;
-    border-radius:10px;
-    cursor:pointer;
-    font-weight:bold;
+    padding: 10px 18px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
 }
-.category-box:hover { opacity:0.85; }
 
-.jobs { background:#ff4d4d; }
-.infra { background:#4dff88; color:#000; }
-.events { background:#4da6ff; }
-.alerts { background:#ffcc00; color:#000; }
-.others { background:#b366ff; }
-.all { background:#000; color:#00ffcc; }
+.category-box:hover {
+    opacity: 0.85;
+}
 
+.jobs   { background:#ef4444; }
+.infra  { background:#22c55e; color:#052e16; }
+.events { background:#3b82f6; }
+.alerts { background:#facc15; color:#422006; }
+.others { background:#a855f7; }
+.all    { background:#020617; color:#38bdf8; }
+
+/* ---------- SEARCH ---------- */
 #searchBox {
-    width:80%;
-    max-width:500px;
-    display:block;
-    margin: 10px auto 20px;
-    padding:10px;
-    border-radius:10px;
-    border:2px solid #00ffcc;
-    background:#000;
-    color:#00ffcc;
+    width: 85%;
+    max-width: 520px;
+    display: block;
+    margin: 10px auto 26px;
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px solid #334155;
+    background: #020617;
+    color: #e5e7eb;
+    font-size: 15px;
 }
 
+/* ---------- NEWS CARD ---------- */
 .news-item {
-    background: rgba(0,0,0,0.55);
-    border-radius:10px;
-    padding:15px;
-    margin: 12px auto;
-    max-width:720px;
+    background: #111827;
+    border-radius: 14px;
+    padding: 18px;
+    margin: 16px auto;
+    max-width: 760px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.35);
 }
-.news-item h3 { margin:0 0 6px; font-size:18px; }
-.news-item .date { font-size:12px; opacity:0.75; }
-.news-item a { color:#00ffcc; }
 
+.news-item h3 {
+    margin: 0 0 6px;
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 1.4;
+    color: #f9fafb;
+}
+
+.news-item .date {
+    font-size: 12px;
+    opacity: 0.75;
+    margin-bottom: 6px;
+}
+
+.news-item a {
+    color: #38bdf8;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.news-item a:hover {
+    text-decoration: underline;
+}
+
+/* ---------- FOOTER ---------- */
 footer {
-    text-align:center;
-    margin:40px 0 20px;
-    opacity:0.8;
+    text-align: center;
+    margin: 40px 0 20px;
+    opacity: 0.75;
+    font-size: 14px;
 }
 </style>
 </head>
@@ -96,13 +142,13 @@ footer {
 <script>
 let allNews = [];
 
-// ---------- SAFE DATE PARSER ----------
+/* ---------- SAFE DATE PARSER ---------- */
 function safeDate(d) {
     const parsed = Date.parse(d);
     return isNaN(parsed) ? 0 : parsed;
 }
 
-// ---------- FETCH WITH CACHE BUST ----------
+/* ---------- FETCH WITH CACHE BUST ---------- */
 fetch("news.json?v=" + Date.now())
 .then(res => {
     if (!res.ok) throw new Error("Cannot load news.json");
@@ -115,11 +161,11 @@ fetch("news.json?v=" + Date.now())
 })
 .catch(err => {
     document.getElementById("news").innerHTML =
-      "<p style='text-align:center;color:#ffcccc'>Failed to load news.</p>";
+      "<p style='text-align:center;color:#fca5a5'>Failed to load news.</p>";
     console.error(err);
 });
 
-// ---------- DISPLAY ----------
+/* ---------- DISPLAY ---------- */
 function displayNews(list) {
     const container = document.getElementById("news");
     container.innerHTML = "";
@@ -134,7 +180,7 @@ function displayNews(list) {
         div.className = "news-item";
         const cat = item.category || "Others";
         div.innerHTML = `
-            <h3><span style="color:#ffcc00">[${cat}]</span> ${item.title}</h3>
+            <h3><span style="color:#38bdf8">[${cat}]</span> ${item.title}</h3>
             <div class="date">${item.date || "Date not available"}</div>
             <a href="${item.link}" target="_blank">Read full article</a>
         `;
@@ -142,13 +188,13 @@ function displayNews(list) {
     });
 }
 
-// ---------- FILTER ----------
+/* ---------- FILTER ---------- */
 function filterCategory(cat) {
     if (cat === "all") displayNews(allNews);
     else displayNews(allNews.filter(n => (n.category || "Others") === cat));
 }
 
-// ---------- SEARCH ----------
+/* ---------- SEARCH ---------- */
 function searchNews() {
     const q = document.getElementById("searchBox").value.toLowerCase();
     displayNews(allNews.filter(n => n.title.toLowerCase().includes(q)));
