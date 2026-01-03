@@ -3,79 +3,122 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hello Aerospace Park!</title>
+<title>Hello Aerospace Park</title>
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 
 <style>
+/* ---------- INSTAGRAM STYLE ANIMATED BACKGROUND ---------- */
 body {
     margin: 0;
-    font-family: Arial, sans-serif;
-    background: linear-gradient(270deg, #ff00cc, #3333ff, #00ffcc, #ffcc00);
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(
+        270deg,
+        #feda75,
+        #fa7e1e,
+        #d62976,
+        #962fbf,
+        #4f5bd5
+    );
     background-size: 800% 800%;
-    animation: neonBG 15s ease infinite;
-    color: #fff;
-}
-@keyframes neonBG {
-    0% {background-position:0% 50%;}
-    50% {background-position:100% 50%;}
-    100% {background-position:0% 50%;}
+    animation: instaBG 18s ease infinite;
+    color: #ffffff;
 }
 
+@keyframes instaBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* ---------- HEADER ---------- */
 h1 {
     text-align: center;
-    margin: 20px 0;
+    margin: 22px 0 8px;
+    font-family: 'Pacifico', cursive;
+    font-size: 36px;
+    letter-spacing: 1px;
 }
+
 .subtitle {
-    text-align:center;
-    margin-bottom:20px;
+    text-align: center;
+    margin-bottom: 22px;
+    opacity: 0.9;
+    font-size: 14px;
 }
 
+/* ---------- CATEGORY FILTER ---------- */
 .categories {
-    display:flex;
-    justify-content:center;
-    flex-wrap:wrap;
-    gap:10px;
-    margin-bottom:20px;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
 }
+
 .category-box {
-    padding:10px 20px;
-    border-radius:10px;
-    cursor:pointer;
-    font-weight:bold;
+    padding: 10px 18px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 13px;
+    transition: transform 0.2s, opacity 0.2s;
 }
+
 .category-box:hover {
-    opacity:0.85;
+    transform: scale(1.05);
+    opacity: 0.9;
 }
 
-.jobs { background:#ff4d4d; }
-.infra { background:#4dff88; color:#000; }
-.events { background:#4da6ff; }
-.alerts { background:#ffcc00; color:#000; }
-.others { background:#b366ff; }
-.all { background:#000; color:#00ffcc; }
+.jobs { background: #ff6b6b; }
+.infra { background: #6bffb3; color: #000; }
+.events { background: #6ba8ff; }
+.alerts { background: #ffd56b; color: #000; }
+.others { background: #c77dff; }
+.all { background: #000; color: #fff; }
 
+/* ---------- NEWS CARD ---------- */
 .news-item {
-    background: rgba(0,0,0,0.55);
-    border-radius:10px;
-    padding:15px;
-    margin: 12px auto;
-    max-width:720px;
-}
-.news-item h3 {
-    margin:0 0 6px;
-    font-size:18px;
-}
-.news-item .date {
-    font-size:12px;
-    opacity:0.75;
-}
-.news-item a {
-    color:#00ffcc;
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(6px);
+    border-radius: 16px;
+    padding: 16px 18px;
+    margin: 14px auto;
+    max-width: 760px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.25);
 }
 
+.news-item h3 {
+    margin: 0 0 6px;
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 1.4;
+}
+
+.news-item .date {
+    font-size: 12px;
+    opacity: 0.75;
+    margin-bottom: 6px;
+}
+
+.news-item a {
+    color: #9be7ff;
+    text-decoration: none;
+    font-size: 13px;
+}
+
+.news-item a:hover {
+    text-decoration: underline;
+}
+
+/* ---------- FOOTER ---------- */
 footer {
-    text-align:center;
-    margin:40px 0 20px;
-    opacity:0.8;
+    text-align: center;
+    margin: 40px 0 22px;
+    font-family: 'Pacifico', cursive;
+    font-size: 16px;
+    opacity: 0.85;
 }
 </style>
 </head>
@@ -96,7 +139,7 @@ footer {
 
 <div id="news"></div>
 
-<footer><i>Created by Animesh</i></footer>
+<footer>Created by Animesh</footer>
 
 <script>
 let allNews = [];
@@ -107,7 +150,7 @@ function safeDate(d) {
     return isNaN(parsed) ? 0 : parsed;
 }
 
-// ---------- FETCH WITH CACHE BUST ----------
+// ---------- FETCH NEWS ----------
 fetch("news.json?v=" + Date.now())
 .then(res => {
     if (!res.ok) throw new Error("Cannot load news.json");
@@ -120,7 +163,7 @@ fetch("news.json?v=" + Date.now())
 })
 .catch(err => {
     document.getElementById("news").innerHTML =
-      "<p style='text-align:center;color:#ffcccc'>Failed to load news.</p>";
+      "<p style='text-align:center;opacity:0.8'>Unable to load news.</p>";
     console.error(err);
 });
 
@@ -141,10 +184,7 @@ function displayNews(list) {
         const cat = item.category || "Others";
 
         div.innerHTML = `
-            <h3>
-              <span style="color:#ffcc00">[${cat}]</span>
-              ${item.title || "Untitled"}
-            </h3>
+            <h3><span style="color:#ffd166">[${cat}]</span> ${item.title || "Untitled"}</h3>
             <div class="date">${item.date || "Date not available"}</div>
             <a href="${item.link}" target="_blank">Read full article</a>
         `;
@@ -157,9 +197,7 @@ function filterCategory(cat) {
     if (cat === "all") {
         displayNews(allNews);
     } else {
-        displayNews(
-            allNews.filter(n => (n.category || "Others") === cat)
-        );
+        displayNews(allNews.filter(n => (n.category || "Others") === cat));
     }
 }
 </script>
